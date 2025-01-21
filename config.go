@@ -8,14 +8,14 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func expandHome(path string) string {
+func ExpandHome(path string) string {
 	home, _ := os.UserHomeDir()
 	return strings.Replace(path, "~", home, 1)
 }
 
 func CheckIfConfigExists(path string) (string, error) {
 	// Set config path
-	path = expandHome(path)
+	path = ExpandHome(path)
 
 	// Check if the file exists
 	_, err := os.Stat(path)
