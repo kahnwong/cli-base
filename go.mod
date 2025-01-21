@@ -5,6 +5,7 @@ go 1.23.5
 require (
 	github.com/getsops/sops/v3 v3.9.3
 	github.com/rs/zerolog v1.33.0
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
@@ -119,5 +120,4 @@ require (
 	google.golang.org/grpc v1.69.2 // indirect
 	google.golang.org/protobuf v1.36.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
