@@ -1,8 +1,6 @@
 package cli_base
 
 import (
-	"os"
-
 	"gopkg.in/yaml.v3"
 
 	"github.com/getsops/sops/v3/decrypt"
@@ -12,8 +10,7 @@ import (
 func decryptSops(path string, format string) []byte {
 	data, err := decrypt.File(path, format) // format: yaml, txt, etc. Refer to sops docs.
 	if err != nil {
-		log.Error().Msgf("Failed to decrypt sops config at: %s", path)
-		os.Exit(1)
+		log.Fatal().Msgf("Failed to decrypt sops config at: %s", path)
 	}
 
 	return data
@@ -23,8 +20,7 @@ func ReadYamlSops[T any](path string) *T {
 	// check if config exists
 	path, err := CheckIfConfigExists(path)
 	if err != nil {
-		log.Error().Msgf("Config doesn't exist at: %s", path)
-		os.Exit(1)
+		log.Fatal().Msgf("Config doesn't exist at: %s", path)
 	}
 
 	// decrypt sops
@@ -35,7 +31,7 @@ func ReadYamlSops[T any](path string) *T {
 	config := new(T)
 	err = yaml.Unmarshal(data, &config)
 	if err != nil {
-		log.Error().Msgf("Error unmarshalling config: %s", path)
+		log.Fatal().Msgf("Error unmarshalling config: %s", path)
 	}
 
 	return config
