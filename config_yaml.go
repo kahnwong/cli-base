@@ -3,29 +3,28 @@ package cli_base
 import (
 	"os"
 
-	"github.com/rs/zerolog/log"
 	"gopkg.in/yaml.v3"
 )
 
-func ReadYaml[T any](path string) *T {
+func ReadYaml[T any](path string) (*T, error) {
 	// check if config exists
-	path, err := CheckIfConfigExists(path)
+	expandedPath, err := CheckIfConfigExists(path)
 	if err != nil {
-		log.Fatal().Msgf("Config doesn't exist at: %s", path)
+		return nil, err
 	}
 
 	// read file
-	data, err := os.ReadFile(path)
+	data, err := os.ReadFile(expandedPath)
 	if err != nil {
-		log.Fatal().Msgf("Error reading config file: %s", path)
+		return nil, err
 	}
 
 	// unmarshall
 	config := new(T)
 	err = yaml.Unmarshal(data, &config)
 	if err != nil {
-		log.Error().Msgf("Error unmarshalling config: %s", path)
+		return nil, err
 	}
 
-	return config
+	return config, nil
 }
