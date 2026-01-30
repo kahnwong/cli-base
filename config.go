@@ -4,9 +4,14 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/rs/zerolog/log"
 )
 
 func ExpandHome(path string) (string, error) {
+	if !strings.HasPrefix(path, "~") {
+		return path, nil
+	}
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return "", err
@@ -40,7 +45,12 @@ func CreateConfigIfNotExists(path string) error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err = file.Close()
+		if err != nil {
+			log.Error().Err(err).Msg("Failed to close config file")
+		}
+	}(file)
 
 	return nil
 }
