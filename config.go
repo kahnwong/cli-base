@@ -1,7 +1,6 @@
 package cli_base
 
 import (
-	"log/slog"
 	"os"
 	"path/filepath"
 	"strings"
@@ -31,10 +30,10 @@ func CheckIfConfigExists(path string) (string, error) {
 	return expandedPath, err
 }
 
-func CreateConfigIfNotExists(path string) error {
+func CreateConfigIfNotExists(path string) (err error) {
 	// create path
 	dir := filepath.Dir(path)
-	err := os.MkdirAll(dir, os.ModePerm)
+	err = os.MkdirAll(dir, os.ModePerm)
 	if err != nil {
 		return err
 	}
@@ -44,12 +43,12 @@ func CreateConfigIfNotExists(path string) error {
 	if err != nil {
 		return err
 	}
-	defer func(file *os.File) {
-		err = file.Close()
-		if err != nil {
-			slog.Error("Failed to close config file", "error", err)
+	defer func() {
+		closeErr := file.Close()
+		if err == nil {
+			err = closeErr
 		}
-	}(file)
+	}()
 
 	return nil
 }
