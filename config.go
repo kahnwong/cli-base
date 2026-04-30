@@ -1,11 +1,10 @@
 package cli_base
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/rs/zerolog/log"
 )
 
 func ExpandHome(path string) (string, error) {
@@ -45,12 +44,9 @@ func CreateConfigIfNotExists(path string) error {
 	if err != nil {
 		return err
 	}
-	defer func(file *os.File) {
-		err = file.Close()
-		if err != nil {
-			log.Error().Err(err).Msg("Failed to close config file")
-		}
-	}(file)
+	if err = file.Close(); err != nil {
+		return fmt.Errorf("failed to close config file: %w", err)
+	}
 
 	return nil
 }
