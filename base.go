@@ -1,12 +1,11 @@
 package cli_base
 
 import (
+	"log/slog"
 	"os"
-
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 )
 
 func init() {
-	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	logger := slog.New(slog.NewTextHandler(os.Stderr, nil))
+	slog.SetDefault(logger)
 }
